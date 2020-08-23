@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chang.hbos.mapper.EthMapper">
+
+    <resultMap type="com.chang.hbos.entity.Eth" id="EthMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="transactionNum" column="transaction_num" jdbcType="NUMERIC"/>
+        <result property="transactionType" column="transaction_type" jdbcType="VARCHAR"/>
+        <result property="transactionSinglePrice" column="transaction_single_price" jdbcType="NUMERIC"/>
+        <result property="transactionSumPrice" column="transaction_sum_price" jdbcType="NUMERIC"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EthMap">
+        select
+          id, transaction_num, transaction_type, transaction_single_price, transaction_sum_price, create_time, update_time
+        from hb.eth
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="EthMap">
+        select
+          id, transaction_num, transaction_type, transaction_single_price, transaction_sum_price, create_time, update_time
+        from hb.eth
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="EthMap">
+        select
+          id, transaction_num, transaction_type, transaction_single_price, transaction_sum_price, create_time, update_time
+        from hb.eth
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="transactionNum != null">
+                and transaction_num = #{transactionNum}
+            </if>
+            <if test="transactionType != null and transactionType != ''">
+                and transaction_type = #{transactionType}
+            </if>
+            <if test="transactionSinglePrice != null">
+                and transaction_single_price = #{transactionSinglePrice}
+            </if>
+            <if test="transactionSumPrice != null">
+                and transaction_sum_price = #{transactionSumPrice}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into hb.eth(transaction_num, transaction_type, transaction_single_price, transaction_sum_price, create_time, update_time)
+        values (#{transactionNum}, #{transactionType}, #{transactionSinglePrice}, #{transactionSumPrice}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update hb.eth
+        <set>
+            <if test="transactionNum != null">
+                transaction_num = #{transactionNum},
+            </if>
+            <if test="transactionType != null and transactionType != ''">
+                transaction_type = #{transactionType},
+            </if>
+            <if test="transactionSinglePrice != null">
+                transaction_single_price = #{transactionSinglePrice},
+            </if>
+            <if test="transactionSumPrice != null">
+                transaction_sum_price = #{transactionSumPrice},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from hb.eth where id = #{id}
+    </delete>
+
+</mapper>
